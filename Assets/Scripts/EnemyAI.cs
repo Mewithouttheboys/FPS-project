@@ -60,30 +60,28 @@ public class EnemyAI : MonoBehaviour
     {
         if(distanceToTarget >= nma.stoppingDistance)
         {
-            ChaseTarget(); // Not defined yet
+            ChaseTarget();
         }
 
-        if(something)
+        if(distanceToTarget <= nma.stoppingDistance)
         {
-        ChaseTarget(); // Not defined yet
-        }
-        
-        if(something else)
-        {
-            AttackTarget(); // Not defined yet
+            AttackTarget();
         }
     }
 
 
     private void ChaseTarget()
     {
-        nma.SetDestination(target.position); // Cut/paste from Update()
+        GetComponent<Animator>().SetBool("attack", false);
+        GetComponent<Animator>().SetTrigger("run");
+        nma.SetDestination(target.position);
     }
 
     private void AttackTarget()
     {
+        GetComponent<Animator>().SetBool("attack", true);
         // Temp for now, to show that the enemy is attacking
-        print(name + " is attacking " + target.name);
+        //print(name + " is attacking " + target.name);
     }
 
 
