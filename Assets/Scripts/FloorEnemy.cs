@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,7 +15,7 @@ public class FloorEnemy : MonoBehaviour
 
     private void Awake()
         {
-            urrentHealth = maxHealth;
+            currentHealth = maxHealth;
         }
 
     public void TakeDamage(float amount)
