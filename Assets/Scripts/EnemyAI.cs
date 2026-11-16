@@ -3,8 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAI : MonoBehaviour
+public class FloorEnemy : MonoBehaviour
 {
+    //gemini stuff
+    public event Action<FloorEnemy> OnEnemyDied;
+
+    [SerializeField] private float maxHealth = 100f;
+    private float currentHealth;
+    private bool isDead = false;
+
+    private void Awake()
+        {
+            urrentHealth = maxHealth;
+        }
+
+    public void TakeDamage(float amount)
+    {
+        if (isDead) return;
+
+        currentHealth -= amount;
+        if (currentHealth <= 0f)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+
+        // Notify the platform (and anything else listening) that this enemy died
+        OnEnemyDied?.Invoke(this);
+
+        Destroy(gameObject);
+    }
+
+
+
     // How close the player can get before the enemy takes notice
     [SerializeField] float chaseRange = 5.0f;
 
@@ -83,6 +119,5 @@ public class EnemyAI : MonoBehaviour
         // Temp for now, to show that the enemy is attacking
         //print(name + " is attacking " + target.name);
     }
-
 
 }
