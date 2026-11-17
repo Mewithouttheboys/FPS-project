@@ -4,10 +4,10 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class FloorEnemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     //gemini stuff
-    public event Action<FloorEnemy> OnEnemyDied;
+    public event Action<Enemy> OnEnemyDied;
 
     [SerializeField] private float maxHealth = 100f;
     private float currentHealth;

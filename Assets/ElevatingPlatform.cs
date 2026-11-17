@@ -9,9 +9,9 @@ public class ElevatingPlatform : MonoBehaviour
     [SerializeField] private float moveSpeed = 3.0f;
     [SerializeField] private float activationDelay = 1.0f;
 
-    [Header("Floor Enemies")]
+    [Header("Enemies")]
     [Tooltip("Assign all enemies that must be defeated to unlock this elevator.")]
-    [SerializeField] private List<FloorEnemy> floorEnemies = new List<FloorEnemy>();
+    [SerializeField] private List<Enemy> Enemies = new List<Enemy>();
 
     private Vector3 startPosition;
     private bool isUnlocked = false;
@@ -23,7 +23,7 @@ public class ElevatingPlatform : MonoBehaviour
         startPosition = transform.position;
 
         // Subscribe to the death event of every enemy on this floor
-        foreach (FloorEnemy enemy in floorEnemies)
+        foreach (Enemy enemy in Enemies)
         {
             if (enemy != null)
             {
@@ -32,20 +32,20 @@ public class ElevatingPlatform : MonoBehaviour
         }
 
         // Edge case: If no enemies were assigned, unlock immediately
-        if (floorEnemies.Count == 0)
+        if (Enemies.Count == 0)
         {
             UnlockPlatform();
         }
     }
 
-    private void HandleEnemyDied(FloorEnemy deadEnemy)
+    private void HandleEnemyDied(Enemy deadEnemy)
     {
         // Unsubscribe to prevent memory leaks and remove from active list
         deadEnemy.OnEnemyDied -= HandleEnemyDied;
-        floorEnemies.Remove(deadEnemy);
+        Enemies.Remove(deadEnemy);
 
         // Check if all enemies on this floor are cleared
-        if (floorEnemies.Count == 0)
+        if (Enemies.Count == 0)
         {
             UnlockPlatform();
         }
