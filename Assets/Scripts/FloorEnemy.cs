@@ -49,7 +49,8 @@ public class FloorEnemy : MonoBehaviour
 
     [SerializeField] Transform target;
 
-    UnityEngine.AI.NavMeshAgent nma;
+    //UnityEngine.AI.
+    NavMeshAgent nma;
 
     private bool isProvoked = false;
     
