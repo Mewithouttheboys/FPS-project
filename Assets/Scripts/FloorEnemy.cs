@@ -75,7 +75,6 @@ public class FloorEnemy : MonoBehaviour
         else if(distanceToTarget <= chaseRange)
         {
             isProvoked = true;
-            // Comment out, but keep to use later
             // nma.SetDestination(target.position);
         }
 
