@@ -11,7 +11,7 @@ public class ElevatingPlatform : MonoBehaviour
 
     [Header("Enemies")]
     [Tooltip("Assign all enemies that must be defeated to unlock this elevator.")]
-    [SerializeField] private List<Enemy> Enemies = new List<Enemy>();
+    [SerializeField] private List<Ghoul> Enemies = new List<Ghoul>();
 
     private Vector3 startPosition;
     private bool isUnlocked = false;
@@ -23,7 +23,7 @@ public class ElevatingPlatform : MonoBehaviour
         startPosition = transform.position;
 
         // Subscribe to the death event of every enemy on this floor
-        foreach (Enemy enemy in Enemies)
+        foreach (Ghoul enemy in Enemies)
         {
             if (enemy != null)
             {
@@ -38,7 +38,7 @@ public class ElevatingPlatform : MonoBehaviour
         }
     }
 
-    private void HandleEnemyDied(Enemy deadEnemy)
+    private void HandleEnemyDied(Ghoul deadEnemy)
     {
         // Unsubscribe to prevent memory leaks and remove from active list
         deadEnemy.OnEnemyDied -= HandleEnemyDied;
