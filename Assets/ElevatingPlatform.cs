@@ -1,29 +1,52 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ElevatingPlatform : MonoBehaviour
 {
+    [Serializable]
+    public class FloorData
+    {
+        [Tooltip("Where the platform stops for this floor.")]
+        public Transform stopPoint;
+
+        [Tooltip("Enemies that must die on the previous floor before moving to this stopPoint.")]
+        public List<Ghoul> requiredEnemies = new List<Ghoul>();
+    }
+
     [Header("Movement Settings")]
-    [Tooltip("Where the platform should move to (e.g., an empty GameObject at the top).")]
-    [SerializeField] private Transform targetDestination;
     [SerializeField] private float moveSpeed = 3.0f;
     [SerializeField] private float activationDelay = 1.0f;
 
-    [Header("Enemies")]
-    [Tooltip("Assign all enemies that must be defeated to unlock this elevator.")]
-    [SerializeField] private List<Ghoul> Enemies = new List<Ghoul>();
+    [Header("Floor Sequence (Top to Bottom or Bottom to Top)")]
+    [Tooltip("Add your 8 floor destinations and the enemies required to unlock each move.")]
+    [SerializeField] private List<FloorData> floors = new List<FloorData>();
 
-    private Vector3 startPosition;
+    private int currentFloorIndex = 0;
     private bool isUnlocked = false;
     private bool isMoving = false;
     private float delayTimer = 0f;
 
     private void Start()
     {
-        startPosition = transform.position;
+        if (floors.Count > 0)
+        {
+            SetupFloor(0);
+        }
+    }
 
-        // Subscribe to the death event of every enemy on this floor
-        foreach (Ghoul enemy in Enemies)
+    private void SetupFloor(int index)
+    {
+        if (index >= floors.Count) return;
+
+        currentFloorIndex = index;
+        isUnlocked = false;
+        isMoving = false;
+
+        FloorData currentFloor = floors[currentFloorIndex];
+
+        // Subscribe to all enemies assigned to the current floor
+        foreach (Ghoul enemy in currentFloor.requiredEnemies)
         {
             if (enemy != null)
             {
@@ -31,27 +54,28 @@ public class ElevatingPlatform : MonoBehaviour
             }
         }
 
-        // Edge case: If no enemies were assigned, unlock immediately
-        if (Enemies.Count == 0)
+        // Edge case: If a floor has 0 enemies assigned, unlock immediately
+        if (currentFloor.requiredEnemies.Count == 0)
         {
-            UnlockPlatform();
+            UnlockCurrentFloor();
         }
     }
 
     private void HandleEnemyDied(Ghoul deadEnemy)
     {
-        // Unsubscribe to prevent memory leaks and remove from active list
         deadEnemy.OnEnemyDied -= HandleEnemyDied;
-        Enemies.Remove(deadEnemy);
 
-        // Check if all enemies on this floor are cleared
-        if (Enemies.Count == 0)
+        FloorData currentFloor = floors[currentFloorIndex];
+        currentFloor.requiredEnemies.Remove(deadEnemy);
+
+        // Once every enemy on this floor is dead, unlock movement to the next stop
+        if (currentFloor.requiredEnemies.Count == 0)
         {
-            UnlockPlatform();
+            UnlockCurrentFloor();
         }
     }
 
-    private void UnlockPlatform()
+    private void UnlockCurrentFloor()
     {
         isUnlocked = true;
         delayTimer = activationDelay;
@@ -59,9 +83,12 @@ public class ElevatingPlatform : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isUnlocked || targetDestination == null) return;
+        if (!isUnlocked || currentFloorIndex >= floors.Count) return;
 
-        // Wait for the brief delay after the last enemy dies so it doesn't feel jarring
+        Transform destination = floors[currentFloorIndex].stopPoint;
+        if (destination == null) return;
+
+        // Brief pause after the last enemy dies before moving
         if (!isMoving)
         {
             delayTimer -= Time.fixedDeltaTime;
@@ -72,15 +99,25 @@ public class ElevatingPlatform : MonoBehaviour
             return;
         }
 
-        // Smoothly move the platform toward the destination
+        // Move toward the current target floor
         transform.position = Vector3.MoveTowards(
             transform.position,
-            targetDestination.position,
+            destination.position,
             moveSpeed * Time.fixedDeltaTime
         );
+
+        // Check if the platform has arrived at this floor's stopPoint
+        if (Vector3.Distance(transform.position, destination.position) < 0.01f)
+        {
+            transform.position = destination.position;
+            isMoving = false;
+            isUnlocked = false;
+
+            // Advance to the next floor and start listening to its enemies
+            SetupFloor(currentFloorIndex + 1);
+        }
     }
 
-    // Keep the player moving smoothly with the platform
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
