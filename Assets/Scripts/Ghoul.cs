@@ -42,12 +42,22 @@ public class Ghoul : MonoBehaviour
 
 
 
+
+
+
+
+
+
+
+
     // How close the player can get before the enemy takes notice
     [SerializeField] float chaseRange = 5.0f;
 
     float distanceToTarget = Mathf.Infinity;
 
     [SerializeField] Transform target;
+
+    [SerializeField] float turnSpeed = 5.0f;
 
     //UnityEngine.AI.
     NavMeshAgent nma;
@@ -85,16 +95,18 @@ public class Ghoul : MonoBehaviour
 
 
 
-    void OnDrawGizmosSelected()
-    {
+    //void OnDrawGizmosSelected()
+    //{
         // Display the chase radius when selected
-        Gizmos.color = Color.yellow; // Choose a color
-        Gizmos.DrawWireSphere(transform.position, chaseRange);
-    }
+       // Gizmos.color = Color.yellow; // Choose a color
+        //Gizmos.DrawWireSphere(transform.position, chaseRange);
+    //}
 
 
     private void EngageTarget()
     {
+        FaceTarget();
+
         if(distanceToTarget >= nma.stoppingDistance)
         {
             ChaseTarget();
@@ -119,6 +131,16 @@ public class Ghoul : MonoBehaviour
         GetComponent<Animator>().SetBool("attack", true);
         // Temp for now, to show that the enemy is attacking
         //print(name + " is attacking " + target.name);
+    }
+
+
+    private void FaceTarget()
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 
 }
