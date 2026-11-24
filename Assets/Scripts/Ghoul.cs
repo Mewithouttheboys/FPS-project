@@ -62,6 +62,8 @@ public class Ghoul : MonoBehaviour
     //UnityEngine.AI.
     NavMeshAgent nma;
 
+    EnemyHealth health;
+
     private bool isProvoked = false;
     
 
@@ -69,11 +71,22 @@ public class Ghoul : MonoBehaviour
     void Start()
     {
         nma = GetComponent<NavMeshAgent>();
+
+        health = GetComponent<EnemyHealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(health.isDead)
+        {
+            enabled = false;
+
+            nma.enabled = false;
+
+            return;
+        }
+
         // Measures the distance between the enemy and the player
         distanceToTarget = Vector3.Distance(target.position,transform.position);
 
@@ -141,6 +154,11 @@ public class Ghoul : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+    }
+
+    public void OnDamageTaken()
+    {
+        isProvoked = true;
     }
 
 }
