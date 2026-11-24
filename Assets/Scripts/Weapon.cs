@@ -107,13 +107,15 @@ public class Weapon : MonoBehaviour
 
 
             CreateImpact(hit);
+            target.TakeDamage(damage);
+            
 
             if(target = null)
             {
                 return;
             }
 
-            target.TakeDamage(damage);
+            
         }
     }
 

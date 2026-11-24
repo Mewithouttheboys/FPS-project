@@ -1,6 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-// Keeps track of how much ammo the player has for each type. It goes on the Player.
 public class Ammo : MonoBehaviour
 {
     // One slot per ammo type. Add and fill them in the Inspector.
