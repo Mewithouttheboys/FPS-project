@@ -110,11 +110,29 @@ namespace StarterAssets
 			_fallTimeoutDelta = FallTimeout;
 		}
 
+
 		private void Update()
 		{
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+
+
+			//gemini stuff!!!
+			float moveX = 0f;
+    		float moveZ = 0f;
+
+    		// Only read horizontal movement input if the elevator isn't locking the player
+    		if (!ElevatingPlatform.IsPlayerMovementLocked)
+    		{
+        		moveX = Input.GetAxis("Horizontal");
+        		moveZ = Input.GetAxis("Vertical");
+    		}
+
+    		Vector3 move = transform.right * moveX + transform.forward * moveZ;
+    		// Apply your normal movement and gravity below...
+
+
 		}
 
 		private void LateUpdate()

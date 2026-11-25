@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ElevatingPlatform : MonoBehaviour
 {
+    public static bool IsPlayerMovementLocked { get; private set; } = false;
+
     [Serializable]
     public class FloorData
     {
@@ -11,24 +13,29 @@ public class ElevatingPlatform : MonoBehaviour
         public Transform stopPoint;
 
         [Tooltip("Enemies that must die on the previous floor before moving to this stopPoint.")]
-        public List<Ghoul> requiredEnemies = new List<Ghoul>();
+        public List<FloorEnemy> requiredEnemies = new List<FloorEnemy>();
     }
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 3.0f;
     [SerializeField] private float activationDelay = 1.0f;
 
-    [Header("Floor Sequence (Top to Bottom or Bottom to Top)")]
-    [Tooltip("Add your 8 floor destinations and the enemies required to unlock each move.")]
+    [Tooltip("If true, the elevator waits until the player steps onto it after enemies are cleared.")]
+    [SerializeField] private bool requirePlayerBoarded = true;
+
+    [Header("Floor Sequence")]
     [SerializeField] private List<FloorData> floors = new List<FloorData>();
 
     private int currentFloorIndex = 0;
     private bool isUnlocked = false;
     private bool isMoving = false;
+    private bool playerOnPlatform = false;
     private float delayTimer = 0f;
 
     private void Start()
     {
+        IsPlayerMovementLocked = false;
+
         if (floors.Count > 0)
         {
             SetupFloor(0);
@@ -42,11 +49,11 @@ public class ElevatingPlatform : MonoBehaviour
         currentFloorIndex = index;
         isUnlocked = false;
         isMoving = false;
+        UpdateMovementLock();
 
         FloorData currentFloor = floors[currentFloorIndex];
 
-        // Subscribe to all enemies assigned to the current floor
-        foreach (Ghoul enemy in currentFloor.requiredEnemies)
+        foreach (FloorEnemy enemy in currentFloor.requiredEnemies)
         {
             if (enemy != null)
             {
@@ -54,21 +61,19 @@ public class ElevatingPlatform : MonoBehaviour
             }
         }
 
-        // Edge case: If a floor has 0 enemies assigned, unlock immediately
         if (currentFloor.requiredEnemies.Count == 0)
         {
             UnlockCurrentFloor();
         }
     }
 
-    private void HandleEnemyDied(Ghoul deadEnemy)
+    private void HandleEnemyDied(FloorEnemy deadEnemy)
     {
         deadEnemy.OnEnemyDied -= HandleEnemyDied;
 
         FloorData currentFloor = floors[currentFloorIndex];
         currentFloor.requiredEnemies.Remove(deadEnemy);
 
-        // Once every enemy on this floor is dead, unlock movement to the next stop
         if (currentFloor.requiredEnemies.Count == 0)
         {
             UnlockCurrentFloor();
@@ -88,13 +93,20 @@ public class ElevatingPlatform : MonoBehaviour
         Transform destination = floors[currentFloorIndex].stopPoint;
         if (destination == null) return;
 
-        // Brief pause after the last enemy dies before moving
         if (!isMoving)
         {
+            // Wait until the player steps onto the platform before counting down
+            if (requirePlayerBoarded && !playerOnPlatform)
+            {
+                delayTimer = activationDelay; // Reset timer if they step off early
+                return;
+            }
+
             delayTimer -= Time.fixedDeltaTime;
             if (delayTimer <= 0f)
             {
                 isMoving = true;
+                UpdateMovementLock();
             }
             return;
         }
@@ -112,17 +124,24 @@ public class ElevatingPlatform : MonoBehaviour
             transform.position = destination.position;
             isMoving = false;
             isUnlocked = false;
+            UpdateMovementLock();
 
-            // Advance to the next floor and start listening to its enemies
             SetupFloor(currentFloorIndex + 1);
         }
+    }
+
+    private void UpdateMovementLock()
+    {
+        IsPlayerMovementLocked = isMoving && playerOnPlatform;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            playerOnPlatform = true;
             other.transform.SetParent(transform);
+            UpdateMovementLock();
         }
     }
 
@@ -130,7 +149,14 @@ public class ElevatingPlatform : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            playerOnPlatform = false;
             other.transform.SetParent(null);
+            UpdateMovementLock();
         }
+    }
+
+    private void OnDisable()
+    {
+        IsPlayerMovementLocked = false;
     }
 }
