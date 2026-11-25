@@ -51,9 +51,9 @@
       "dependencies": {}
     },
     "com.unity.cinemachine": {
-      "version": "file:com.unity.cinemachine",
+      "version": "6.6.0",
       "depth": 0,
-      "source": "embedded",
+      "source": "builtin",
       "dependencies": {
         "com.unity.splines": "2.8.4",
         "com.unity.modules.imgui": "1.0.0"
