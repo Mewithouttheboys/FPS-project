@@ -70,6 +70,8 @@ public class Ghoul : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        target = FindAnyObjectByType<PlayerHealth>().transform;
+
         nma = GetComponent<NavMeshAgent>();
 
         health = GetComponent<EnemyHealth>();

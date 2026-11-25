@@ -50,4 +50,16 @@ public class EnemyHealth : MonoBehaviour
 
         GetComponent<Animator>().SetTrigger("die");
     }
+
+
+    public void AttackHitEvent()
+    {
+        if(target == null)
+        {
+            return;
+        }
+
+        target.GetComponent<PlayerHealth>().TakeDamage(damage);
+    }
+
 }
