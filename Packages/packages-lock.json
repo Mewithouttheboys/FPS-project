@@ -16,11 +16,11 @@
       }
     },
     "com.unity.ads": {
-      "version": "4.19.0",
+      "version": "4.22.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.ugui": "1.0.0",
+        "com.unity.ugui": "2.0.0",
         "com.unity.modules.androidjni": "1.0.0"
       },
       "url": "https://packages.unity.com"
@@ -51,9 +51,9 @@
       "dependencies": {}
     },
     "com.unity.cinemachine": {
-      "version": "6.6.0",
+      "version": "file:com.unity.cinemachine",
       "depth": 0,
-      "source": "builtin",
+      "source": "embedded",
       "dependencies": {
         "com.unity.splines": "2.8.4",
         "com.unity.modules.imgui": "1.0.0"
@@ -407,6 +407,16 @@
       "dependencies": {
         "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.animation": "1.0.0"
+      }
+    },
+    "com.unity.modules.hierarchy": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.hierarchycore": "1.0.0",
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
       }
     },
     "com.unity.modules.hierarchycore": {

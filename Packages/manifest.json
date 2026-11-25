@@ -2,7 +2,7 @@
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
-    "com.unity.ads": "4.19.0",
+    "com.unity.ads": "4.22.0",
     "com.unity.ai.navigation": "2.0.17",
     "com.unity.analytics": "3.8.2",
     "com.unity.cinemachine": "6.6.0",
@@ -30,6 +30,7 @@
     "com.unity.modules.audio": "1.0.0",
     "com.unity.modules.cloth": "1.0.0",
     "com.unity.modules.director": "1.0.0",
+    "com.unity.modules.hierarchy": "1.0.0",
     "com.unity.modules.imageconversion": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",
     "com.unity.modules.jsonserialize": "1.0.0",
