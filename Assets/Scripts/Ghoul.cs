@@ -13,6 +13,22 @@ public class Ghoul : MonoBehaviour
     private float currentHealth;
     private bool isDead = false;
 
+    [SerializeField] private Transform target;
+
+        // How close the player can get before the enemy takes notice
+    [SerializeField] float chaseRange = 5.0f;
+
+    float distanceToTarget = Mathf.Infinity;
+
+    [SerializeField] float turnSpeed = 5.0f;
+
+    //UnityEngine.AI.
+    NavMeshAgent nma;
+
+    EnemyHealth health;
+
+    private bool isProvoked = false;
+
     private void Awake()
         {
             currentHealth = maxHealth;
@@ -39,38 +55,11 @@ public class Ghoul : MonoBehaviour
 
         Destroy(gameObject);
     }
-
-
-
-
-
-
-
-
-
-
-
-    // How close the player can get before the enemy takes notice
-    [SerializeField] float chaseRange = 5.0f;
-
-    float distanceToTarget = Mathf.Infinity;
-
-    [SerializeField] Transform target;
-
-    [SerializeField] float turnSpeed = 5.0f;
-
-    //UnityEngine.AI.
-    NavMeshAgent nma;
-
-    EnemyHealth health;
-
-    private bool isProvoked = false;
     
 
     // Start is called before the first frame update
     void Start()
     {
-        target = FindAnyObjectByType<PlayerHealth>().transform;
 
         nma = GetComponent<NavMeshAgent>();
 

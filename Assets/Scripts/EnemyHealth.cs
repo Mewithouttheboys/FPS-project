@@ -5,6 +5,8 @@ public class EnemyHealth : MonoBehaviour
 {
     // How much damage the enemy can take before it dies.
     [SerializeField] float hitPoints = 100f;
+    [SerializeField] float damage = 50f;
+    PlayerHealth target;
 
     // True once the enemy has died. Other scripts check it through IsDead().
     public bool isDead = false;
@@ -16,6 +18,7 @@ public class EnemyHealth : MonoBehaviour
     {
         // Grab the collider on this same GameObject.
         enemyColl = GetComponent<Collider>();
+        target = FindAnyObjectByType<PlayerHealth>();
     }
 
     // Lets other scripts ask whether the enemy is dead.

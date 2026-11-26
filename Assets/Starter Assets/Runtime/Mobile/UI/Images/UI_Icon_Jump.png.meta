@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: 751aa1b6637101946b2fdbb7aa27d6ad
+AssetOrigin:
+  serializedVersion: 1
+  productId: 196526
+  packageName: First Person + Third Person | Character Controllers
+  packageVersion: 2.0.2
+  assetPath: Assets/Starter Assets/Runtime/Mobile/UI/Images/UI_Icon_Jump.png
+  uploadId: 1032646
 TextureImporter:
   internalIDToNameTable:
   - first:

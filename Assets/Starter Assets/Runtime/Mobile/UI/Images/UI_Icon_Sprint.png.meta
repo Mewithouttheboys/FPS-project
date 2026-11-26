@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: b0fa70abd2a79904cb00b175dfd8ec7e
+AssetOrigin:
+  serializedVersion: 1
+  productId: 196526
+  packageName: First Person + Third Person | Character Controllers
+  packageVersion: 2.0.2
+  assetPath: Assets/Starter Assets/Runtime/Mobile/UI/Images/UI_Icon_Sprint.png
+  uploadId: 1032646
 TextureImporter:
   internalIDToNameTable:
   - first:
