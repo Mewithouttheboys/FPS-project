@@ -13,7 +13,7 @@ public class ElevatingPlatform : MonoBehaviour
         public Transform stopPoint;
 
         [Tooltip("Enemies that must die on the previous floor before moving to this stopPoint.")]
-        public List<FloorEnemy> requiredEnemies = new List<FloorEnemy>();
+        public List<Ghoul> requiredEnemies = new List<Ghoul>();
     }
 
     [Header("Movement Settings")]
@@ -53,7 +53,7 @@ public class ElevatingPlatform : MonoBehaviour
 
         FloorData currentFloor = floors[currentFloorIndex];
 
-        foreach (FloorEnemy enemy in currentFloor.requiredEnemies)
+        foreach (Ghoul enemy in currentFloor.requiredEnemies)
         {
             if (enemy != null)
             {
@@ -67,7 +67,7 @@ public class ElevatingPlatform : MonoBehaviour
         }
     }
 
-    private void HandleEnemyDied(FloorEnemy deadEnemy)
+    private void HandleEnemyDied(Ghoul deadEnemy)
     {
         deadEnemy.OnEnemyDied -= HandleEnemyDied;
 
